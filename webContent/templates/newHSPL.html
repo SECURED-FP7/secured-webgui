@@ -1,0 +1,26 @@
+<li id="{{ hspl_id }}" class="hspl">
+	<select class="subject" name="hspl[{{ hspl_id }}][subject]" required>
+		<option value="{{ username }}">{{ username }}</option>
+		{% for user in createdUsers %}
+                {% if user != username %}<option value="{{ user }}">{{ user }}</option>{% endif %}
+                {% endfor %}
+	</select>
+	<select class="action" name="hspl[{{ hspl_id }}][action]" required>
+		<option value="">Action</option>
+		{% for action in actions %}
+		<option value="{{ action.id }}">{{ action.string }}</option>
+		{% endfor %}
+	</select>
+	<select class="object" name="hspl[{{ hspl_id }}][object]" required>
+		<option value="">Object</option>
+	</select>
+	<select id="{{ hspl_id }}cond1" class="condition" name="hspl[{{ hspl_id }}][condition][{{ hspl_id }}cond1]">
+		<option value="">Condition</option>
+	</select>
+	<div class="control-bar">
+		<button type="button" class="btn btn-blue btn-addc">Add condition</button>
+		<button type="button" class="btn btn-blue btn-remc">Remove condition</button>
+		<button type="button" class="btn btn-blue btn-clear">Clear rule</button>
+		<button type="button" id="{{ hspl_id }}" class="btn btn-blue btn-rem">Remove rule</button>
+	</div>
+</li>

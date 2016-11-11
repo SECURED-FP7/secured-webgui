@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+		<title>{{ title }}</title>
+		<link rel="icon" href="../static/images/favicon.ico">
+		<link rel="stylesheet" href="../static/css/style.css">
+		<script type="text/javascript" src="../static/js/jquery.js"></script>
+		<script type="text/javascript" src="../static/js/jquery-ui.js"></script>
+		<script type="text/javascript" src="../static/js/jquery.ui.touch-punch.js"></script>
+		<script type="text/javascript" src="../static/js/graphic.js"></script>
+	</head>
+	
+	<body>
+		<!-- Loader -->
+		<div id="startLoader"> </div>
+		
+		<!-- Header -->
+		<header class="header-fixed">
+			<div class="header-limiter">
+				<div id="title-container">
+					<h1>Users &amp; Groups</h1>
+					<h2>Add new user or new group</h2>
+				</div>
+				<nav>
+					<ul class="nav nav-header">
+						{% if usertype == 1 or usertype == 3 %}
+						<a href="/store/"><button type="button" class="btn btn-grey navbar-btn">myStore</button></a>
+						<a href="/app/"><button type="button" class="btn btn-grey navbar-btn">myApps</button></a>
+						{% endif %}
+						{% if usertype == 2 or usertype == 3 %}
+						<a href="/hspl/"><button type="button" class="btn btn-grey navbar-btn">myHSPL</button></a>
+						{% endif %}
+						{% if usertype == 1 %}
+						<a href="/capability/"><button type="button" class="btn btn-grey navbar-btn">myCapabilities</button></a>
+						<a href="/mspl/"><button type="button" class="btn btn-grey navbar-btn">myMSPL</button></a>
+						<a href="/optimization/"><button type="button" class="btn btn-grey navbar-btn">myOptimizations</button></a>
+						{% endif %}
+						<a href="/users/"><button type="button" class="btn btn-grey navbar-btn">Users</button></a>
+						<a href="/logout/"><button type="button" class="btn btn-blue navbar-btn">Logout</button></a>
+					</ul>
+				</nav>
+			</div>
+		</header>
+		
+		<div class="header-fixed-placeholder"> </div>
+		
+		<!-- Section -->
+		<section class="section" class="list-group">
+			
+			<!-- Response message -->
+			<div id="response_message" class="{{ message.type }}">{{ message.text }}</div>
+			
+			<!-- New user form -->
+			<div class="login-container">
+				<form id="add-user-form" class="form-signin" action="/users/?addtype=user" method="post" autocomplete="off">
+	                <input type="text" id="inputEmail" name="new_username" placeholder="Username" required autocomplete="off" />
+	                <input type="password" id="inputPassword" name="new_password" placeholder="Password" required autocomplete="off" />
+	                <select id="user_type" class="form-select" name="new_usertype" required >
+	                	<option value="0">User type</option>
+	                	<option value="1">Expert user</option>
+	                	<option value="2">Normal user</option>
+	                	<option value="3">Enthusiastic user</option>
+	                </select>
+	                {% csrf_token %}
+	                <button class="btn btn-signin" type="submit" tabindex="4">Add user</button>
+				</form>
+			</div>
+			
+			<!-- Delete user form -->
+                        <div class="login-container">
+                                <form id="delete-user-form" class="form-signin" action="/users/?addtype=delete" method="post" autocomplete="off">
+                        <select id="user_delete_name" class="form-select" name="delete_username" required >
+                        	{% for user in createdUser %}
+                                	{% if user != username %}<option value="{{ user }}">{{ user }}</option>{% endif %}
+                                {% endfor %}
+			</select>
+                        {% csrf_token %}
+                        <button class="btn btn-signin" type="submit">Delete user</button>
+                                </form>
+                        </div>
+			
+			<!-- New group form -->
+			<div class="login-container">
+				<form id="add-group-form" class="form-signin" action="/users/?addtype=group" method="post">
+	                <input type="text" id="inputGroup" name="groupname" placeholder="Group name" required autocomplete="off" />
+	                {% csrf_token %}
+	                <button class="btn btn-signin" type="submit">Add group</button>
+				</form>
+			</div>
+
+			<!-- Delete user form -->
+                        <div class="login-container">
+                                <form id="group-user-form" class="form-signin" action="/users/?addtype=association" method="post" autocomplete="off">
+                        <select id="user_associate_name" class="form-select" name="associate_username" required >
+                                {% for user in createdUser %}
+                                        {% if user != username %}<option value="{{ user }}">{{ user }}</option>{% endif %}
+                                {% endfor %}
+                        </select>
+			<select id="group_associate_name" class="form-select" name="associate_group" required >
+                                {% for group in createdGroup %}
+                                        <option value="{{ group }}">{{ group }}</option>
+                                {% endfor %}
+                        </select>
+                        {% csrf_token %}
+                        <button class="btn btn-signin" type="submit">Associate a group</button>
+                                </form>
+                        </div>
+			
+		</section>
+		
+		<!-- Footer -->
+		<footer class="footer">
+			<p>&copy; Copyright 2013-2015 <a href="http://www.polito.it" target="_blank">Politecnico di Torino</a>. All rights reserved.</p>
+		</footer>
+		
+	</body>
+</html>

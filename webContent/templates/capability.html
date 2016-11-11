@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+		<title>{{ title }}</title>
+		<link rel="icon" href="../static/images/favicon.ico">
+		<link rel="stylesheet" href="../static/css/style.css">
+		<script type="text/javascript" src="../static/js/jquery.js"></script>
+		<script type="text/javascript" src="../static/js/jquery-ui.js"></script>
+		<script type="text/javascript" src="../static/js/jquery.ui.touch-punch.js"></script>
+		<script type="text/javascript" src="../static/js/jquery.cookie.js"></script>
+		<script type="text/javascript" src="../static/js/graphic.js"></script>
+		<script type="text/javascript" src="../static/js/capability.js"></script>
+	</head>
+	
+	<body>
+		<!-- Loader -->
+		<div id="startLoader"> </div>
+		
+		<!-- Header -->
+		<header class="header-fixed">
+			<div class="header-limiter">
+				<div id="title-container">
+					<h1>MyCapability - Set your active capabilities</h1>
+					<h2>Define which capabilities are actually active by using the proper button on/off</h2>
+				</div>
+				<nav>
+					<ul class="nav nav-header">
+						{% if usertype == 1 or usertype == 3 %}
+						<a href="/store/"><button type="button" class="btn btn-grey navbar-btn">myStore</button></a>
+						<a href="/app/"><button type="button" class="btn btn-grey navbar-btn">myApps</button></a>
+						{% endif %}
+						{% if usertype == 2 or usertype == 3 %}
+						<a href="/hspl/"><button type="button" class="btn btn-grey navbar-btn">myHSPL</button></a>
+						{% endif %}
+						{% if usertype == 1 %}
+						<a href="/capability/"><button type="button" class="btn btn-grey navbar-btn">myCapabilities</button></a>
+						<a href="/mspl/"><button type="button" class="btn btn-grey navbar-btn">myMSPL</button></a>
+						<a href="/optimization/"><button type="button" class="btn btn-grey navbar-btn">myOptimizations</button></a>
+						{% endif %}	
+						<a href="/users/"><button type="button" class="btn btn-grey navbar-btn">Users</button></a>
+						<a href="/logout/"><button type="button" class="btn btn-blue navbar-btn">Logout</button></a>
+					</ul>
+				</nav>
+			</div>
+		</header>
+		
+		<!-- Section -->
+		<section class="section" class="list-group">
+			
+			<!-- Response message -->
+			<div id="response_message" class="{{ response_message.type }}">{{ response_message.text }}</div>
+			
+			<!-- Modal MSPL -->
+			<div id="modMSPL" class="modalDialog">
+				<div>
+					<a href="#close" title="Close" class="close">X</a>
+					 <form action="/mspl/" method="post">
+						<h2><input type="text" class="form-control" name="mspl_title" value="" placeholder="MSPL title" /></h2>
+						<div class="mspl-valid-box" style="text-align: center"> </div>
+						<textarea id="mspl-text" name="mspl_xml" placeholder="Insert here the configuration.."> </textarea>
+						<select id="mspl-list">
+							<option value="0">Select MSPL</option>
+							{% for mspl in mspls %}
+							<option value="{{ mspl.id }}" capability_id="{{ mspl.capability }}">{{ mspl.name }}</option>
+							{% endfor %}
+						</select>
+						<div id="mspl-buttons">
+							<button type="button" class="btn btn-blue btn-vconf">Analyse config</button>
+							<button type="button" class="btn btn-blue btn-val">Validate XML</button>
+							<button type="submit" class="btn btn-blue btn-conf">Confirm</button>
+						</div>
+						<input type="hidden" name="mspl_id" value="" />
+						<input type="hidden" name="cap_id" value="" />
+						<input type="hidden" name="psa_id" value="" />
+						{% csrf_token %}
+					</form>
+				</div>
+			</div>
+			
+			<!-- Capability list -->
+			<div class="list-container-center">
+				<button type="button" class="btn btn-blue save-btn btn-upper btn-submit">Apply Changes</button>
+				<div class="list-content list-app">
+					<!-- Filter bar -->
+					<form id="form-filter" class="form-filter" action="/capability/" method="get">
+						<select class="filter filter-name cap" name="filter-capability">
+							<option value="">Filter capability</option>
+							{% for cap in caps %}
+							<option value="{{ cap.id }}">{{ cap.name }}</option>
+							{% endfor %}
+						</select>
+					</form>
+					<!-- Capabilities list -->
+					<form id="form-app" action="/capability/" method="post">
+						<ul class="list-center sortable">
+						{% for uapp in user_applications %}
+						<li id="psa-id_{{ uapp.id }}" class="draggable apps">
+							<span class="app-name">{{ uapp.application.name }}</span>
+							{% for cap in uapp.capabilities %}
+							<div class="app-capability">
+								<span class="cap-name">{{ cap.name }}</span>
+								<div class="radio_button">
+									<div class="config">
+										<a class="o-modal" href="#modMSPL">
+											<button type="button" id="{{ cap.id }}" psa_id="{{ uapp.id }}" class="btn {% if cap.mspl %}btn-green{% else %}btn-blue{% endif %} btn-config">CONFIG</button>
+										</a>
+									</div>
+								</div>
+							</div>
+							{% endfor %}
+						</li>
+						{% empty %}
+						<div id="empty_list">Your application list is empty. You can select new applications in the store.</div>
+						{% endfor %}
+						</ul>
+						{% csrf_token %}
+					</form>
+				</div>
+				<button type="button" class="btn btn-blue btn-vconf">Analyse config</button>
+				<button type="button" class="btn btn-blue save-btn btn-submit">Apply changes</button>
+			</div>
+		</section>
+		
+		<!-- Footer -->
+		<footer class="footer">
+			<p>&copy; Copyright 2013-2015 <a href="http://www.polito.it" target="_blank">Politecnico di Torino</a>. All rights reserved.</p>
+		</footer>
+		
+	</body>
+</html>

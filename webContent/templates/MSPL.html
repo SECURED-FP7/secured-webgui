@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+		<title>{{ title }}</title>
+		<link rel="icon" href="../static/images/favicon.ico">
+		<link rel="stylesheet" href="../static/css/style.css">
+		<script type="text/javascript" src="../static/js/jquery.js"></script>
+		<script type="text/javascript" src="../static/js/jquery-ui.js"></script>
+		<script type="text/javascript" src="../static/js/jquery.ui.touch-punch.js"></script>
+		<script type="text/javascript" src="../static/js/jquery.cookie.js"></script>
+		<script type="text/javascript" src="../static/js/graphic.js"></script>
+		<script type="text/javascript" src="../static/js/MSPL.js"></script>
+	</head>
+	
+	<body>
+		<!-- Loader -->
+		<div id="startLoader"> </div>
+		
+		<!-- Header -->
+		<header class="header-fixed">
+			<div class="header-limiter">
+				<div id="title-container">
+					<h1>myMSPL - Medium-level Security Policy Language</h1>
+					<h2>Configure the applications with MSPL language</h2>
+				</div>
+				<nav>
+					<ul class="nav nav-header">
+						{% if usertype == 1 or usertype == 3 %}
+						<a href="/store/"><button type="button" class="btn btn-grey navbar-btn">myStore</button></a>
+						<a href="/app/"><button type="button" class="btn btn-grey navbar-btn">myApps</button></a>
+						{% endif %}
+						{% if usertype == 2 or usertype == 3 %}
+						<a href="/hspl/"><button type="button" class="btn btn-grey navbar-btn">myHSPL</button></a>
+						{% endif %}
+						{% if usertype == 1 %}
+						<a href="/capability/"><button type="button" class="btn btn-grey navbar-btn">myCapabilities</button></a>
+						<a href="/mspl/"><button type="button" class="btn btn-grey navbar-btn">myMSPL</button></a>
+						<a href="/optimization/"><button type="button" class="btn btn-grey navbar-btn">myOptimizations</button></a>
+						{% endif %}
+						<a href="/users/"><button type="button" class="btn btn-grey navbar-btn">Users</button></a>
+						<a href="/logout/"><button type="button" class="btn btn-blue navbar-btn">Logout</button></a>
+					</ul>
+				</nav>
+			</div>
+		</header>
+		
+		<div class="header-fixed-placeholder"> </div>
+		
+		<!-- Section -->
+		<section class="section" class="list-group">
+			
+			<!-- Response message -->
+			<div id="response_message" class="{{ message.type }}">{{ message.text }}</div>
+			
+			<!-- MSPL config -->
+			<div id="openModal" class="modalDialog">
+				<div>
+					<a href="#close" title="Close" class="close">X</a>
+					 <form id="mspl-form" action="/mspl/" method="post">
+						<h2><input type="text" class="form-control" name="mspl_title" value="" placeholder="MSPL title" /></h2>
+						<div class="mspl-valid-box" style="text-align: center"> </div>
+						<textarea id="mspl-text" name="mspl_xml" placeholder="Insert here the XML.."> </textarea>
+						<div id="mspl-buttons">
+							<button type="button" class="btn btn-blue btn-vconf">Analyse config</button>
+							<button type="button" class="btn btn-blue btn-val">Validate XML</button>
+							<button type="submit" class="btn btn-blue btn-conf">Confirm</button>
+						</div>
+						{% csrf_token %}
+						<input type="hidden" name="mspl_id" value="" />
+					</form>
+				</div>
+			</div>
+			
+			<!-- MSPL list -->
+			<div class="list-container-center">
+				<a class="o-modal" href="#openModal"><button type="button" id="0" class="btn btn-blue btn-upper">Add MSPL</button></a>
+				<div class="list-content list-app">
+					<!-- Filter bar -->
+					<form id="form-filter" class="form-filter" action="/mspl/" method="get">
+						<input type="text" class="filter filter-name" name="filter-name" placeholder="Filter Name" autocomplete="off" value="" />
+					</form>
+					<ul class="list-center sortable">
+						{% for mspl in mspl_list %}
+						<li id="mspl_{{ mspl.id }}" class="draggable mspl">
+							<span class="app-name">{{ mspl.name }}</span>
+							<span class="radio_button">
+								<a class="o-modal" href="#openModal"><button type="button" id="{{ mspl.id }}" class="btn btn-blue btn-config">EDIT</button></a>
+								<form class="mspl-delete" action="/mspl/delete/" method="post">
+									<button type="submit" class="btn btn-blue btn-config">DELETE</button>
+									<input type="hidden" name="mspl_id" value="{{ mspl.id }}">
+									{% csrf_token %}
+								</form>
+							</span>
+						</li>
+						{% empty %}
+						<div id="empty_list">Your MSPL list is empty. You can add new MSPL clicking on the button below.</div>
+						{% endfor %}
+					</ul>
+				</div>
+				<a href="/IFA/"><button type="button" class="btn btn-green navbar-btn">IFA</button></a>
+				<a href="/MIFA/"><button type="button" class="btn btn-green navbar-btn">MIFA</button></a>
+				<a class="o-modal" href="#openModal"><button type="button" id="0" class="btn btn-blue">Add MSPL</button></a>
+			</div>
+		</section>
+		
+		<!-- Footer -->
+		<footer class="footer">
+			<p>&copy; Copyright 2013-2015 <a href="http://www.polito.it" target="_blank">Politecnico di Torino</a>. All rights reserved.</p>
+		</footer>
+		
+	</body>
+</html>

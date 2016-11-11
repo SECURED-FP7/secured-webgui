@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+		<title>{{ title }}</title>
+		<link rel="icon" href="../static/images/favicon.ico">
+		<link rel="stylesheet" type="text/css" href="../static/css/style.css">
+		<script type="text/javascript" src="../static/js/jquery.js"></script>
+		<script type="text/javascript" src="../static/js/jquery-ui.js"></script>
+		<script type="text/javascript" src="../static/js/jquery.ui.touch-punch.js"></script>
+		<script type="text/javascript" src="../static/js/jquery.cookie.js"></script>
+		<script type="text/javascript" src="../static/js/app.js"></script>
+		<script type="text/javascript" src="../static/js/graphic.js"></script>
+	</head>
+	
+	<body>
+		<!-- Loader -->
+		<div id="startLoader"> </div>
+		
+		<!-- Header -->
+		<header class="header-fixed">
+			<div class="header-limiter">
+				<div id="title-container">
+					<h1>MyOptimizations - Define your optimization strategy</h1>
+					<h2>Define which parameters have to be optimized in the MSPL policy refinement process</h2>
+				</div>
+				<nav>
+					<ul class="nav nav-header">
+						{% if usertype == 1 or usertype == 3 %}
+						<a href="/store/"><button type="button" class="btn btn-grey navbar-btn">myStore</button></a>
+						<a href="/app/"><button type="button" class="btn btn-grey navbar-btn">myApps</button></a>
+						{% endif %}
+						{% if usertype == 2 or usertype == 3 %}
+						<a href="/hspl/"><button type="button" class="btn btn-grey navbar-btn">myHSPL</button></a>
+						{% endif %}
+						{% if usertype == 1 %}
+						<a href="/capability/"><button type="button" class="btn btn-grey navbar-btn">myCapabilities</button></a>
+						<a href="/mspl/"><button type="button" class="btn btn-grey navbar-btn">myMSPL</button></a>
+						<a href="/optimization/"><button type="button" class="btn btn-grey navbar-btn">myOptimizations</button></a>
+						{% endif %}
+						<a href="/users/"><button type="button" class="btn btn-grey navbar-btn">Users</button></a>
+						<a href="/logout/"><button type="button" class="btn btn-blue navbar-btn">Logout</button></a>
+					</ul>
+				</nav>
+			</div>
+		</header>
+				
+		<!-- Section -->
+		<section class="section">
+			
+			<!-- Response message -->
+			<div id="response_message" class="{{ response_message.type }}">{{ response_message.text }}</div>
+			
+			<!-- New user form -->
+			<div class="opt-container">
+				<form id="add-user-form" class="form-signin" action="/optimization/" method="post">
+	                <select id="opt-1" class="form-select" name="opt-1">
+	                	{% for opt in opt1 %}
+	                	<option value="{{ opt.id }}" {% if user_opt == opt.constant %}selected{% endif %}>{{ opt.value }}</option>
+	                	{% endfor%}
+	                </select>
+	               <!--<select id="opt-2" class="form-select" name="opt-2">
+	                	{% for opt in opt2 %}
+	                	<option value="{{ opt.id }}" {% if user_opt.opt2 == opt.id %}selected{% endif %}>{{ opt.value }}</option>
+	                	{% endfor%}
+	                </select>
+	                <select id="opt-3" class="form-select" name="opt-3">
+	                	{% for opt in opt3 %}
+	                	<option value="{{ opt.id }}" {% if user_opt.opt3 == opt.id %}selected{% endif %}>{{ opt.value }}</option>
+	                	{% endfor%}
+	                </select>-->
+	                {% csrf_token %}
+	                <button class="btn btn-signin" type="submit">Apply Changes</button>
+				</form>
+			</div>
+
+		</section>
+		
+		<!-- Footer -->
+		<footer class="footer">
+			<p>&copy; Copyright 2013-2015 <a href="http://www.polito.it" target="_blank">Politecnico di Torino</a>. All rights reserved.</p>
+		</footer>
+		
+	</body>
+</html>

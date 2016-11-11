@@ -1,0 +1,22 @@
+#####standard .git ignore entries#####
+
+## IDE Specific Files ##
+.project
+.settings
+.pydevproject
+
+## Compilation Files ##
+*.pyc
+
+## Local files and directories ##
+*.sqlite3
+*.log
+*.swp
+webContent/migrations/
+
+## Misc Ignores (OS specific etc) ##
+.DS_STORE
+.DS_Store
+.metadata
+
+certificate/*

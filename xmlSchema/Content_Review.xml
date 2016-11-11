@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:associationList xmlns:tns="http://www.example.org/AssociationList"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.example.org/AssociationList ../../java/schema/AssociationList_Schema.xsd ">
+	
+	<tns:associations Name="advertisement">
+		<tns:URI URI_value="ads.bing.com" />
+		<tns:URI URI_value="ads.forbes.com" />
+		<tns:URI URI_value="ads.expedia.com" />
+	</tns:associations>
+
+
+	<tns:associations Name="chat_room">
+		<tns:URI URI_value="chat-paradise.com" />
+		<tns:URI URI_value="chat.free.fr" />
+		<tns:URI URI_value="chat.gratis.es" />
+	</tns:associations>
+
+	<tns:associations Name="gambling">
+		<tns:URI URI_value="www.pokerstars.it/" />
+		<tns:URI URI_value="www.888poker.com" />
+		<tns:URI URI_value="www.bwin.com" />
+	</tns:associations>
+
+	<tns:associations Name="kids_time_wasting">
+		<tns:URI URI_value="gamehouse.com" />
+		<tns:URI URI_value="allgamesfree.com" />
+		<tns:URI URI_value="fastgames.com" />
+	</tns:associations>
+	
+	<tns:associations Name="phishing">
+		<tns:URI URI_value="www.drive.chelae.com" />
+		<tns:URI URI_value="www.support-update.uk" />
+	</tns:associations>
+
+	<tns:associations Name="social_network">
+		<tns:URI URI_value="www.facebook.com" />
+		<tns:URI URI_value="www.myspace.com" />
+		<tns:URI URI_value="www.twitter.com" />
+		<tns:URI URI_value="www.linkedin.com" />
+		<tns:URI URI_value="www.plus.google.com" />
+		<tns:URI URI_value="www.instagram.com" />
+	</tns:associations>
+
+	<tns:associations Name="copyrighted_content">
+		<tns:URI URI_value="www.streamsports.me" />
+		<tns:URI URI_value="www.piratestreaming.co" />
+	</tns:associations>
+
+	<tns:associations Name="EU_blacklist">
+	<tns:URI URI_value="cocaine.org" />
+	<tns:URI URI_value="cadaver.org" />	
+	</tns:associations>
+
+	<tns:associations Name="file_threats">
+		<tns:RE re_value="\.tar.gz$" />
+		<tns:RE re_value="\.tar$" />
+		<tns:RE re_value="\.zip$" />
+		<tns:RE re_value="\.exe$" />
+		<tns:RE re_value="\.iso$" />
+	</tns:associations>
+
+
+<tns:associations Name="adult">
+		<tns:RE re_value="playboy" />
+		<tns:RE re_value="sex" />
+		<tns:RE re_value="porn" />
+		<tns:RE re_value="isis" />
+		<tns:RE re_value="war" />
+	</tns:associations>
+
+<tns:associations Name="count_connection">
+		 <tns:Event>
+      	<tns:events_name>EVENT_CONNECTION</tns:events_name>
+      	<tns:interval>30</tns:interval>
+      	<tns:threshold>50</tns:threshold>
+    	</tns:Event>
+</tns:associations>
+
+<tns:associations Name="scan_pdf">
+		<!--  <tns:Event>
+      	<tns:events_name>EVENT_CONNECTION</tns:events_name>
+      	<tns:interval>30</tns:interval>
+      	<tns:threshold>50</tns:threshold>
+    	</tns:Event> -->
+    	 <tns:Mime-type Mime-type_value="application/pdf"/>
+</tns:associations>
+
+<tns:associations Name="scan_xdosexec">
+		<!--  <tns:Event>
+      	<tns:events_name>EVENT_CONNECTION</tns:events_name>
+      	<tns:interval>30</tns:interval>
+      	<tns:threshold>50</tns:threshold>
+    	</tns:Event> -->
+    	  <tns:Mime-type Mime-type_value="application/x-dosexec"/>
+</tns:associations>
+
+</tns:associationList>

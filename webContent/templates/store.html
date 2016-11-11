@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+		<title>{{ title }}</title>
+		<link rel="icon" href="../static/images/favicon.ico">
+		<link rel="stylesheet" href="../static/css/style.css">
+		<script type="text/javascript" src="../static/js/jquery.js"></script>
+		<script type="text/javascript" src="../static/js/jquery-ui.js"></script>
+		<script type="text/javascript" src="../static/js/jquery.cookie.js"></script>
+		<script type="text/javascript" src="../static/js/jquery.ui.touch-punch.js"></script>
+		<script type="text/javascript" src="../static/js/graphic.js"></script>
+		<script type="text/javascript" src="../static/js/store.js"></script>
+	</head>
+	
+	<body>
+		<!-- Loader -->
+		<div id="startLoader"> </div>
+		
+		<!-- Header -->
+		<header class="header-fixed">
+			<div class="header-limiter">
+				<div id="title-container">
+					<h1>MyStore - Customize your network services</h1>
+					<h2>Customize your service by dragging and dropping the applications in the proper box</h2>
+				</div>
+				<nav>
+					<ul class="nav nav-header">
+						{% if usertype == 1 or usertype == 3 %}
+						<a href="/store/"><button type="button" class="btn btn-grey navbar-btn">myStore</button></a>
+						<a href="/app/"><button type="button" class="btn btn-grey navbar-btn">myApps</button></a>
+						{% endif %}
+						{% if usertype == 2 or usertype == 3 %}
+						<a href="/hspl/"><button type="button" class="btn btn-grey navbar-btn">myHSPL</button></a>
+						{% endif %}
+						{% if usertype == 1 %}
+						<a href="/capability/"><button type="button" class="btn btn-grey navbar-btn">myCapabilities</button></a>
+						<a href="/mspl/"><button type="button" class="btn btn-grey navbar-btn">myMSPL</button></a>
+						<a href="/optimization/"><button type="button" class="btn btn-grey navbar-btn">myOptimizations</button></a>
+						{% endif %}
+						<a href="/users/"><button type="button" class="btn btn-grey navbar-btn">Users</button></a>
+						<a href="/logout/"><button type="button" class="btn btn-blue navbar-btn">Logout</button></a>
+					</ul>
+				</nav>
+			</div>
+		</header>
+		
+		<div class="header-fixed-placeholder"> </div>
+		
+		<!-- Section -->
+		<section class="section list-group">
+			
+			<!-- Response message -->
+			<div id="response_message" class="{{ response_message.type }}">{{ response_message.text }}</div>
+			
+			<!-- Store -->
+			<div class="list list-container-left">
+				<a href="/upload/"><button type="button" class="btn btn-blue btn-save btn-upper">Add your own app</button></a>
+				<div class="list-content">
+					<div class="description-center">MyStore: available applications</div>
+					<!-- Filter bar -->
+					<form id="form-filter-store" class="form-filter" action="/store/" method="get">
+						<input type="text" class="filter filter-name store" name="s-filter-name" placeholder="Filter Name" autocomplete="off" value="" />
+						<select class="filter filter-capability store" name="filter-capability">
+							<option value="">Filter capability</option>
+							{% for cap in caps %}
+							<option value="{{ cap.id }}">{{ cap.name }}</option>
+							{% endfor %}
+						</select>
+						<input type="text" class="filter filter-price store" name="s-filter-price" placeholder="Filter Price" autocomplete="off" value="" />
+					</form>
+					<!-- Store list -->
+					<ul id="sourceList" class="sortable">
+					{% for app in store_apps %}
+						<li id="store_{{ app.id }}" {% if app.is_capability == True %}style="background-color: #FF3333;"{% endif %} class="draggable store">
+							<span class="app-name app-store-name">{{ app.name }}</span>
+							<span class="app-description">{{ app.description }}</span>
+							<span class="app-price">Cost: <span class="price">{{ app.price }}</span> €</span>
+							{% for cap in app.capabilities %}
+							<input type="hidden" class="app-capability" name="app-capability" value="{{ cap }}" disabled>
+							{% endfor %}
+						</li>
+					{% endfor %}
+					</ul>
+				</div>
+				<a href="/upload/"><button type="button" class="btn btn-blue btn-save">Add your own app</button></a>
+			</div>
+			
+			<!-- MyApps -->
+			<div class="list list-container-right">
+				<button type="button" class="btn btn-blue btn-save btn-upper btn-submit">Buy</button>
+				<div class="list-content">
+					<div class="description-center">MyApps: selected applications</div>
+					<!-- Filter bar -->
+					<form id="form-filter-app" class="form-filter" action="/store/" method="get">
+						<input type="text" class="filter filter-name app" name="a-filter-name" placeholder="Filter Name" autocomplete="off" value="" />
+						<select class="filter filter-capability app" name="filter-capability">
+							<option value="">Filter capability</option>
+							{% for cap in caps %}
+							<option value="{{ cap.id }}">{{ cap.name }}</option>
+							{% endfor %}
+						</select>
+						<input type="text" class="filter filter-price app" name="a-filter-price" placeholder="Filter Price" autocomplete="off" value="" />
+					</form>
+					<!-- App list -->
+					<ul id="targetList" class="sortable">						
+						<li class="empty-placeholder" style="display: list-item; {% if user_apps %}display: none;{% endif %}">Drop here the services</li>
+					 	{% for app in user_apps %}
+						<li id="user_{{ app.id }}" {% if app.application.is_capability == True %}style="background-color: #FF3333;"{% endif %} class="draggable apps">
+							<span class="app-name">{{ app.application.name }}</span>
+							<span class="app-description">{{ app.application.description }}</span>
+							<span class="app-price" style="display: none">Cost: <span class="price">{{ app.application.price }}</span> €</span>
+							{% for cap in app.application.capabilities %}
+							<input type="hidden" class="app-capability" name="app-capability" value="{{ cap }}" disabled>
+							{% endfor %}
+						</li>
+						{% endfor %}
+					</ul>
+				</div>
+				<span id="total-cost-container">Total cost: <span id="total-cost">0</span> €</span>
+				<button type="button" class="btn btn-blue btn-save btn-submit">Buy</button>
+			</div>
+			
+		</section>
+		
+		<!-- Footer -->
+		<footer class="footer">
+			<p>&copy; Copyright 2013-2015 <a href="http://www.polito.it" target="_blank">Politecnico di Torino</a>. All rights reserved.</p>
+		</footer>
+
+	</body>	
+</html>

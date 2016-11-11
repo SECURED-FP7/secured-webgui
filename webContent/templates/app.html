@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+		<title>{{ title }}</title>
+		<link rel="icon" href="../static/images/favicon.ico">
+		<link rel="stylesheet" type="text/css" href="../static/css/style.css">
+		<script type="text/javascript" src="../static/js/jquery.js"></script>
+		<script type="text/javascript" src="../static/js/jquery-ui.js"></script>
+		<script type="text/javascript" src="../static/js/jquery.ui.touch-punch.js"></script>
+		<script type="text/javascript" src="../static/js/jquery.cookie.js"></script>
+		<script type="text/javascript" src="../static/js/app.js"></script>
+		<script type="text/javascript" src="../static/js/graphic.js"></script>
+	</head>
+	
+	<body>
+		<!-- Loader -->
+		<div id="startLoader"> </div>
+		
+		<!-- Header -->
+		<header class="header-fixed">
+			<div class="header-limiter">
+				<div id="title-container">
+					<h1>MyApps - Set your active applications</h1>
+					<h2>Define which applications are actually active by using the proper button on/off</h2>
+				</div>
+				<nav>
+					<ul class="nav nav-header">
+						{% if usertype == 1 or usertype == 3 %}
+						<a href="/store/"><button type="button" class="btn btn-grey navbar-btn">myStore</button></a>
+						<a href="/app/"><button type="button" class="btn btn-grey navbar-btn">myApps</button></a>
+						{% endif %}
+						{% if usertype == 2 or usertype == 3 %}
+						<a href="/hspl/"><button type="button" class="btn btn-grey navbar-btn">myHSPL</button></a>
+						{% endif %}
+						{% if usertype == 1 %}
+						<a href="/capability/"><button type="button" class="btn btn-grey navbar-btn">myCapabilities</button></a>
+						<a href="/mspl/"><button type="button" class="btn btn-grey navbar-btn">myMSPL</button></a>
+						<a href="/optimization/"><button type="button" class="btn btn-grey navbar-btn">myOptimizations</button></a>
+						{% endif %}
+						<a href="/users/"><button type="button" class="btn btn-grey navbar-btn">Users</button></a>
+						<a href="/logout/"><button type="button" class="btn btn-blue navbar-btn">Logout</button></a>
+					</ul>
+				</nav>
+			</div>
+		</header>
+				
+		<!-- Section -->
+		<section class="section" class="list-group">
+			
+			<!-- Response message -->
+			<div id="response_message" class="{{ response_message.type }}">{{ response_message.text }}</div>
+			
+			<!-- Application list -->
+			<div class="list-container-center">
+				<button type="button" class="btn btn-blue save-btn btn-upper btn-submit">Apply Changes</button>
+				<div class="list-content list-app">
+					<!-- Filter bar -->
+					<form id="form-filter" class="form-filter" action="/app/filter/" method="get">
+						<input type="text" class="filter filter-name app" name="filter-name" placeholder="Filter Name" autocomplete="off" value="" />
+						<select class="filter filter-capability app" name="filter-capability">
+							<option value="">Filter capability</option>
+							{% for cap in caps %}
+							<option value="{{ cap.id }}">{{ cap.name }}</option>
+							{% endfor %}
+						</select>
+						<input type="text" class="filter filter-price app" name="filter-price" placeholder="Filter Price" autocomplete="off" value="" />
+					</form>
+					<!-- Applications list -->
+					<form id="form-app" action="/app/" method="post">
+						<ul class="list-center applist sortable">
+						{% for app in apps %}
+						<li id="psa-id_{{ app.id }}" class="draggable apps">
+							<span class="app-name">{{ app.application.name }}</span>
+							<div class="radio_button">
+								<div class="onoffswitch">
+									<input type="checkbox" id="{{ app.id }}" name="app-actives" class="onoffswitch-checkbox app-checked" value="{{ app.id }}" {% if app.enabled == "True" %}checked="checked"{% endif %}>
+									<label class="onoffswitch-label" for="{{ app.id }}">
+										<span class="onoffswitch-inner"> </span>
+										<span class="onoffswitch-switch"> </span>
+									</label>
+								</div>
+								<span class="scroll"><img class="up" src="../static/images/arrow.png" ></span>
+							</div>
+							<input type="hidden" name="app-order" value="{{ app.id }}">
+							<input type="hidden" class="app-price" name="app-price" value="{{ app.application.price }}" disabled>
+							{% for capability in app.application.capabilities %}
+							<input type="hidden" class="app-capability" name="app-capability" value="{{ capability }}" disabled>
+							{% endfor %}
+						</li>
+						{% empty %}
+						<div id="empty_list">Your application list is empty. You can select new applications in the store.</div>
+						{% endfor %}
+						</ul>
+						{% csrf_token %}
+					</form>
+				</div>
+				<!-- <a href="/service-graph/"><button type="button" class="btn btn-blue">Applications order</button></a> -->
+				<button type="button" class="btn btn-blue save-btn btn-submit">Apply changes</button>
+			</div>
+		</section>
+		
+		<!-- Footer -->
+		<footer class="footer">
+			<p>&copy; Copyright 2013-2015 <a href="http://www.polito.it" target="_blank">Politecnico di Torino</a>. All rights reserved.</p>
+		</footer>
+		
+	</body>
+</html>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:associationList xmlns:tns="http://www.example.org/AssociationList" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/AssociationList ../../java/schema/AssociationList_Schema.xsd ">
+  
+  	<tns:associations Name="antiparental_control_proxies">
+		<tns:IP ip_value="77.242.188.42" />
+	</tns:associations>
+	
+	<tns:associations Name="family_shield_dns">
+		<tns:IP ip_value="130.192.225.238" />
+	</tns:associations>
+  
+  <tns:associations Name="vtt_address">
+		<tns:IP ip_value="91.197.85.151" />
+	</tns:associations>
+	
+	<tns:associations Name="default_gateway">
+		<tns:IP ip_value="1.1.1.1" />
+	</tns:associations>
+	
+	<tns:associations Name="corporate_vpn">
+    <tns:VPN localEndpoint=""
+             localSubNet="10.2.1.0/24,10.2.2.0/24,10.2.3.0/24,10.2.5.0/24"
+             remoteEndpint="147.83.42.207"
+             remoteSubNet="0.0.0.0/0">
+      <tns:autentication> 
+        <tns:cert cert_filename="ClientCert.pem"
+        		  cert_id="psa@secured.eu" 
+        		  psKey_value="mypk" 
+        		  remote_id="@vpn.secured.eu"/>
+      </tns:autentication>
+    </tns:VPN>
+	</tns:associations>
+	
+</tns:associationList>
+

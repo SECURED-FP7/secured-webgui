@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+		<title>{{ title }}</title>
+		<link rel="icon" href="../static/images/favicon.ico">
+		<link rel="stylesheet" href="../static/css/style.css">
+		<link rel="stylesheet" href="../static/css/timepicker.min.css">
+		<script type="text/javascript" src="../static/js/jquery.js"></script>
+		<script type="text/javascript" src="../static/js/jquery-ui.js"></script>
+		<script type="text/javascript" src="../static/js/jquery.ui.touch-punch.js"></script>
+		<script type="text/javascript" src="../static/js/jquery.cookie.js"></script>
+		<script type="text/javascript" src="../static/js/graphic.js"></script>
+		<script type="text/javascript" src="../static/js/objHSPL.js"></script>
+		<script type="text/javascript" src="../static/js/HSPL.js"></script>
+		<script type="text/javascript" src="../static/js/timepicker.min.js"></script>
+	</head>
+	
+	<body>
+		<!-- Loader -->
+		<div id="startLoader"> </div>
+		
+		<!-- Start Header -->
+		<header class="header-fixed">
+			<div class="header-limiter">
+				<div id="title-container">
+					<h1>MyHSPL - High-level security policy</h1>
+					<h2>Define the policy composing a sentence with the following structure</h2>
+				</div>
+				<nav>
+					<ul class="nav nav-header">
+						{% if usertype == 1 or usertype == 3 %}
+						<a href="/store/"><button type="button" class="btn btn-grey navbar-btn">myStore</button></a>
+						<a href="/app/"><button type="button" class="btn btn-grey navbar-btn">myApps</button></a>
+						{% endif %}
+						{% if usertype == 2 or usertype == 3 %}
+						<a href="/hspl/"><button type="button" class="btn btn-grey navbar-btn">myHSPL</button></a>
+						{% endif %}
+						{% if usertype == 1 %}
+						<a href="/capability/"><button type="button" class="btn btn-grey navbar-btn">myCapabilities</button></a>
+						<a href="/mspl/"><button type="button" class="btn btn-grey navbar-btn">myMSPL</button></a>
+						<a href="/optimization/"><button type="button" class="btn btn-grey navbar-btn">myOptimizations</button></a>
+						{% endif %}
+						{% if is_admin %}
+						<a href="/users/"><button type="button" class="btn btn-grey navbar-btn">Users</button></a>
+						{% endif %}
+						<a href="/logout/"><button type="button" class="btn btn-blue navbar-btn">Logout</button></a>
+					</ul>
+				</nav>
+			</div>
+		</header>
+		
+		<!-- Section -->
+		<section class="section" class="list-group">
+			
+			<!-- Response message -->
+			<div id="response_message" class="{{ response_message.type }}">{{ response_message.text }}</div>
+			
+			<!-- Delete form -->
+			<form id="hspl-delete" action="/hspl/delete/" method="post">
+				<input type="hidden" id="hspl_id" name="hspl_id" value="">
+				{% csrf_token %}
+			</form>
+			
+			<!-- HSPL list -->
+			<form id="form-hspl" action="/hspl/" method="post">
+				<div class="list-container-center">
+					<div class="list-content">
+						<center id="empty_text" {% if hspls|length != 0 %}style="visibility:hidden"{% endif %}>There are no policies defined</center>
+						<ul class="hspl-list sortable" style="text-align: left" id="hspl_list">
+							{% for hspl in hspls %}
+							<li id="{{ hspl.id }}" class="hspl">
+								<select class="subject" name="hspl[{{ hspl.id }}][subject]" required>
+									<option value="{{ username }}" {% if hspl.subject == username %}selected{% endif %}>{{ username }}</option>
+									{% for user in createdUser %}
+									{% if user != username %}<option value="{{ user }}" {% if hspl.subject == user %}selected{% endif %}>{{ user }}</option>{% endif %}
+									{% endfor %}
+								</select>
+								<select class="action" name="hspl[{{ hspl.id }}][action]" required disabled>
+									<option value="">Select</option>
+									{% for action in actions %}
+									<option value="{{ action.id }}"{% if action.id == hspl.action %}selected{% endif %}>{{ action.string }}</option>
+									{% endfor %}
+								</select>
+								<select class="object" name="hspl[{{ hspl.id }}][object]" required {% if hspl.condition|length != 0 %}disabled{% endif %}>
+									<option value="">Select</option>
+									{% for object in hspl.getObjectList %}
+									<option value="{{ object.id }}"{% if object.id == hspl.object %}selected{% endif %}>{{ object.string }}</option>
+									{% endfor %}
+								</select>
+								{% for cond in hspl.condition %}
+								<select id="{{ hspl.id }}cond{{ cond.id }}" class="condition" name="hspl[{{ hspl.id }}][condition][{{ hspl.id }}cond{{ cond.id }}]">
+									<option value="">Select</option>
+									{% for condition in hspl.getConditionList %}
+									<option value="{{ condition.id }}"{% if condition.id == cond.condition %}selected{% endif %}>{{ condition.string }}</option>
+									{% endfor %}
+								</select>
+								{% if cond.condition == 1 %}
+								<div class="datetimepicker condition input-append">
+									<input type="text" data-format="hh:mm" class="condition hspl-input datetime" name="hspl[{{ hspl.id }}][datetime1][{{ hspl.id }}cond{{ cond.id }}]" value="{{ cond.datetime1|time:"H:i" }}" disabled="disabled">
+									<span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
+								</div>
+								<div class="datetimepicker condition input-append">
+									<input type="text" data-format="hh:mm" class="condition hspl-input datetime" name="hspl[{{ hspl.id }}][datetime2][{{ hspl.id }}cond{{ cond.id }}]" value="{{ cond.datetime2|time:"H:i" }}" disabled="disabled">
+									<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i> </span>
+								</div>
+								{% else %}
+								<input type="text" class="condition hspl-input" name="hspl[{{ hspl.id }}][text][{{ hspl.id }}cond{{ cond.id }}]" value="{{ cond.text }}">
+								{% endif %}
+								{% empty %}
+								<select id="{{ hspl.id }}cond1" class="condition" name="hspl[{{ hspl.id }}][condition][{{ hspl.id }}cond1]">
+									<option value="" selected>Select</option>
+									{% for condition in hspl.getConditionList %}
+									<option value="{{ condition.id }}">{{ condition.string }}</option>
+									{% endfor %}
+								</select>
+								{% endfor %}
+								<div class="control-bar">
+									<button type="button" class="btn btn-blue btn-addc">Add condition</button>
+									<button type="button" class="btn btn-blue btn-remc">Remove condition</button>
+									<button type="button" class="btn btn-blue btn-clear">Clear</button>
+									<button type="button" id="{{ hspl.id }}" class="btn btn-blue btn-rem">Remove rule</button>
+								</div>
+							</li>
+							{% endfor %}
+						</ul>
+					</div>
+					{% csrf_token %}
+					<button type="button" class="btn btn-blue btn-addrule">Add Rule</button>
+					<button type="submit" class="btn btn-blue">Apply Changes</button>
+				</div>
+			</form>
+			
+		</section>
+		
+		<!-- Footer -->
+		<footer class="footer">
+			<p>&copy; Copyright 2013-2015 <a href="http://www.polito.it" target="_blank">Politecnico di Torino</a>. All rights reserved.</p>
+		</footer>
+		
+	</body>
+</html>
