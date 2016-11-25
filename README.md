@@ -4,16 +4,19 @@ SECURED Policy GUI
 This is a web interface for non-tech savvy users to define high-level security policies 
 using an English-like syntax. For the lifetime of the SECURED project this has been 
 known as the "Grandmother GUI" since it should be relatively intuitive to use. This project
-is dependent on these two projects:
+is dependent on these three projects:
 
 * the [User Profile repository (UPR)](https://github.com/SECURED-FP7/secured-upr), which is
   the central database for storing user policies and other attributes
 * the [Security Policy Module (SPM)](https://github.com/SECURED-FP7/secured-spm), which is the backend
   service that analyses and translates policies
+* the [PSA repository](https://github.com/SECURED-FP7/secured-psar), which contains metadata about the
+  security application capabilities 
 
-Ideally you should have these installed before continuing. 
+Ideally you should have these installed before continuing. If you 
+just want to inspect the GUI then see the **Demo** section below.
 
-**Installation**
+# Installation
 
 Dependencies for Ubuntu (and Debian):
 
@@ -34,12 +37,12 @@ You can install the GUI with the following commands:
 
 **Configuration**
 
-Configurations to the required external services (the UPR and the SPM)
+Configurations to the required external services (the UPR, PSAR and the SPM)
 are set in the file **constants.py** (webContent/constants.py)
 
-**Use HTTPS**
+**Enabling HTTPS**
 
-To use HTTPS is needed to use the OpenSSL package. Generate the new certificate:
+To enable HTTPS you need to use the OpenSSL package. Generate the new certificate:
 
     mkdir certificate
     cd certificate/
@@ -60,14 +63,13 @@ To use HTTPS the command is the following:
     python manage.py runsslserver --certificate certificate/server.crt \
     --key certificate/server.key --addrport 0.0.0.0:8080 &
 
-**Live demo**
+# Demo
 
-As today (feb 25 2016), a live demo is available here:
-
+As of Feb 25 2016, a live demo is available here:
     
      https://securedproject.ipv6.polito.it:9091/
      
      User/password: father/father
 
-This GGUI are connected to the UPR at 130.192.225.110:8081 and at the PSAR 130.192.225.110:8080
+This GUI are connected to the UPR at 130.192.225.110:8081 and at the PSAR 130.192.225.110:8080
 
